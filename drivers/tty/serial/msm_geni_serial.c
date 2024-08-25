@@ -114,7 +114,7 @@
 #define DEF_TX_WM		(2)
 #define DEF_FIFO_WIDTH_BITS	(32)
 
-#define WAKEBYTE_TIMEOUT_MSEC	(2000)
+#define WAKEBYTE_TIMEOUT_MSEC	(100)
 #define WAIT_XFER_MAX_ITER	(2)
 #define WAIT_XFER_MAX_TIMEOUT_US	(150)
 #define WAIT_XFER_MIN_TIMEOUT_US	(100)
@@ -3014,6 +3014,9 @@ static void msm_geni_serial_cons_pm(struct uart_port *uport,
 		unsigned int new_state, unsigned int old_state)
 {
 	struct msm_geni_serial_port *msm_port = GET_DEV_PORT(uport);
+
+	if (unlikely(!uart_console(uport)))
+		return;
 
 	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF) {
 		se_geni_resources_on(&msm_port->serial_rsc);
